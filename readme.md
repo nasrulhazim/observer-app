@@ -164,3 +164,59 @@ Now you observers will be much cleaner and manageable.
 BUT, another issue raised - what if you have a single observer, observed by many models? It's a tedious job to register the same observer for different models.
 
 ## Single Observer, Observe By Many Models.
+
+For the previous issue, let's refactor a bit:
+
+```php
+<?php
+
+namespace App\Observers;
+
+/**
+ *
+ */
+class Kernel
+{
+    /**
+     * Array of model-observer
+     * @var array
+     */
+    protected $observers = [
+        // FQCN of Model => FQCN of Observer
+        \App\User::class => \App\Observers\OnCreatingObserver::class,
+    ];
+
+    /**
+     * Make this class
+     * @return \App\Observers\Kernel
+     */
+    public static function make()
+    {
+        return (new self);
+    }
+
+    /**
+     * Register observers
+     * @return void
+     */
+    public function observes()
+    {
+        $this->observeSingle();
+    }
+
+    /**
+     * Observe One-on-One Model-Observer
+     * @return void
+     */
+    private function observeSingle()
+    {
+        if (count($this->observers) > 0) {
+            foreach ($this->observers as $model => $observer) {
+                if (class_exists($model) && class_exists($observer)) {
+                    $model::observe($observer);
+                }
+            }
+        }
+    }
+}
+```
