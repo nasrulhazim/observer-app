@@ -12,7 +12,7 @@ class OnCreatingObserver
     {
         if (Schema::hasColumn($model->getTable(), 'hashslug') && is_null($model->hashslug)) {
             // create hashslug based on timestamp random string
-            $user->hashslug = Hash::make(time() . str_random(12));
+            $model->hashslug = Hash::make(time() . str_random(12));
         }
     }
 }
