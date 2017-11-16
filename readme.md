@@ -91,11 +91,11 @@ Three issues here:
 
 1. Bloated Codes
 2. Unmanageable Codes
-3. Single Observer, can be Observer by many models.
+3. Single Observer, observe by many models.
 
 ### Solutions
 
-### Bloated Codes
+### Bloated Codes, UnManageable Codes
 
 For the issue no. 1, the strategy, which I apply to my recent works - refer to how Laravel provide us to register custom commands in their `app/Console/Kernel.php`.
 
@@ -161,4 +161,6 @@ protected $observers = [
 
 Now you observers will be much cleaner and manageable. 
 
-BUT, another issue raised - what if you have a single observer, observed by many models?
+BUT, another issue raised - what if you have a single observer, observed by many models? It's a tedious job to register the same observer for different models.
+
+## Single Observer, Observe By Many Models.

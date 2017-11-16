@@ -31,6 +31,15 @@ class Kernel
      */
     public function observes()
     {
+        $this->observeSingle();
+    }
+
+    /**
+     * Observe One-on-One Model-Observer
+     * @return void
+     */
+    private function observeSingle()
+    {
         if (count($this->observers) > 0) {
             foreach ($this->observers as $model => $observer) {
                 if (class_exists($model) && class_exists($observer)) {
