@@ -13,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        \App\User::observe(\App\Observers\OnCreatingObserver::class);
+        \App\Observers\Kernel::make()->observes();
     }
 
     /**

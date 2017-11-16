@@ -100,3 +100,65 @@ Three issues here:
 For the issue no. 1, the strategy, which I apply to my recent works - refer to how Laravel provide us to register custom commands in their `app/Console/Kernel.php`.
 
 Same thing I will apply for the Bloated Codes.
+
+1. Create a file name `Kernel.php` in `app/Observers` directory.
+
+2. Add the following codes in `app/Observers/Kernel.php`. This `kernel.php` it's an endpoint for register all your observers.
+
+```php
+<?php
+
+namespace App\Observers;
+
+/**
+ *
+ */
+class Kernel
+{
+    /**
+     * Array of model-observer
+     * @var array
+     */
+    protected $observers = [
+        // FQCN of Model => FQCN of Observer
+    ];
+
+    /**
+     * Make this class
+     * @return \App\Observers\Kernel
+     */
+    public static function make()
+    {
+        return (new self);
+    }
+
+    /**
+     * Register observers
+     * @return void
+     */
+    public function observes()
+    {
+        if (count($this->observers) > 0) {
+            foreach ($this->observers as $model => $observer) {
+                if (class_exists($model) && class_exists($observer)) {
+                    $model::observe($observer);
+                }
+            }
+        }
+    }
+}
+```
+
+3. Above code will register all your model-observer based on your setup in `$observers` property. An example of the usage on how you should register your model and observer:
+
+```php
+protected $observers = [
+	\App\User::class => \App\Observers\OnCreatingObserver::class,
+];
+```
+
+4. Once you're done setup your model and observer, you may replace your `\App\User::observe(\App\Observers\OnCreatingObserver::class);` in `AppServiceProvider.php` with `\App\Observers\Kernel::make()->observes();`
+
+Now you observers will be much cleaner and manageable. 
+
+BUT, another issue raised - what if you have a single observer, observed by many models?
