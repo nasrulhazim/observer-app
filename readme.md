@@ -296,6 +296,6 @@ You're done now! Here some example on how you can setup your `$observeBy` proper
             \App\Models\Agency::class,
             \App\Models\Module::class,
             \App\Models\User::class,
-         ]
-	];
+        ],
+    ];
 ```
