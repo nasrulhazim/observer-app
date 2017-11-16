@@ -1,3 +1,5 @@
+# Observer
+
 1. Create a new Laravel Application `laravel new observer-app`
 
 2. Go into `observer-app` directory.
@@ -226,7 +228,7 @@ Now, to add capability to register multiple models for an observer, we going to 
 1. Add property `$observedBy`:
 
 ```php
-  /**
+    /**
      * One observer observed by many models
      * @var array
      */
@@ -247,7 +249,7 @@ Now, to add capability to register multiple models for an observer, we going to 
 2. Add method `observeBy()`:
 
 ```php
-/**
+    /**
      * One observer observed by many models
      * @return void
      */
@@ -268,7 +270,7 @@ Now, to add capability to register multiple models for an observer, we going to 
 Now update your `observes()` to run both `observeSingle()` and `observeBy()`.
 
 ```php
-	/**
+    /**
      * Register observers
      * @return void
      */
@@ -282,7 +284,7 @@ Now update your `observes()` to run both `observeSingle()` and `observeBy()`.
 You're done now! Here some example on how you can setup your `$observeBy` property:
 
 ```php
- /**
+     /**
      * One observer observed by many models
      * @var array
      */
