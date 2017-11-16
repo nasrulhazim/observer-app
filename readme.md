@@ -220,3 +220,80 @@ class Kernel
     }
 }
 ```
+
+Now, to add capability to register multiple models for an observer, we going to add two things:
+
+1. Add property `$observedBy`:
+
+```php
+  /**
+     * One observer observed by many models
+     * @var array
+     */
+    protected $observeBy = [
+        // FQCN of ObserverA - [
+        //  FQCN of ModelA,
+        //  FQCN of ModelB,
+        //  FQCN of ModelB,
+        // ],
+        // FQCN of ObserverA - [
+        //  FQCN of ModelA,
+        //  FQCN of ModelB,
+        //  FQCN of ModelB,
+        // ],
+    ];
+```
+
+2. Add method `observeBy()`:
+
+```php
+/**
+     * One observer observed by many models
+     * @return void
+     */
+    private function observeBy()
+    {
+        if (count($this->observeBy) > 0) {
+            foreach ($this->observeBy as $observer => $models) {
+                foreach ($models as $model) {
+                    if (class_exists($model) && class_exists($observer)) {
+                        $model::observe($observer);
+                    }
+                }
+            }
+        }
+    }
+```
+
+Now update your `observes()` to run both `observeSingle()` and `observeBy()`.
+
+```php
+	/**
+     * Register observers
+     * @return void
+     */
+    public function observes()
+    {
+        $this->observeSingle();
+        $this->observeBy();
+    }
+```
+
+You're done now! Here some example on how you can setup your `$observeBy` property:
+
+```php
+ /**
+     * One observer observed by many models
+     * @var array
+     */
+    protected $observeBy = [
+        \App\Observers\HashidsObserver::class => [
+            /**
+             * Models
+             */
+            \App\Models\Agency::class,
+            \App\Models\Module::class,
+            \App\Models\User::class,
+         ]
+	];
+```

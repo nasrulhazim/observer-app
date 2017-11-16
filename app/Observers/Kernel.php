@@ -17,6 +17,23 @@ class Kernel
     ];
 
     /**
+     * One observer observed by many models
+     * @var array
+     */
+    protected $observeBy = [
+        // FQCN of ObserverA - [
+        //  FQCN of ModelA,
+        //  FQCN of ModelB,
+        //  FQCN of ModelB,
+        // ],
+        // FQCN of ObserverA - [
+        //  FQCN of ModelA,
+        //  FQCN of ModelB,
+        //  FQCN of ModelB,
+        // ],
+    ];
+
+    /**
      * Make this class
      * @return \App\Observers\Kernel
      */
@@ -32,6 +49,7 @@ class Kernel
     public function observes()
     {
         $this->observeSingle();
+        $this->observeBy();
     }
 
     /**
@@ -44,6 +62,23 @@ class Kernel
             foreach ($this->observers as $model => $observer) {
                 if (class_exists($model) && class_exists($observer)) {
                     $model::observe($observer);
+                }
+            }
+        }
+    }
+
+    /**
+     * One observer observed by many models
+     * @return void
+     */
+    private function observeBy()
+    {
+        if (count($this->observeBy) > 0) {
+            foreach ($this->observeBy as $observer => $models) {
+                foreach ($models as $model) {
+                    if (class_exists($model) && class_exists($observer)) {
+                        $model::observe($observer);
+                    }
                 }
             }
         }
